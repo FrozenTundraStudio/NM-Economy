@@ -14,6 +14,7 @@
 ### ATM
 - Allows player to make deposits or withdrawals from their bank account
 - Displays bank account balance.
+
 ![atm.png](src/main/resources/github/atm.png)
 ![mainmenu.png](src/main/resources/github/mainmenu.png)
 ![deposit.png](src/main/resources/github/deposit.png)
