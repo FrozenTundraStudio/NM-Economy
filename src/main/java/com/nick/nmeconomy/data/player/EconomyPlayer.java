@@ -1,4 +1,4 @@
-package com.nick.nmeconomy.data;
+package com.nick.nmeconomy.data.player;
 
 import com.mojang.serialization.Codec;
 import com.nick.nmeconomy.NMEconomy;

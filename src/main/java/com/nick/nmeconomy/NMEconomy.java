@@ -5,8 +5,9 @@ import com.nick.nmeconomy.block.ModBlocks;
 import com.nick.nmeconomy.block.entity.ModBlockEntities;
 import com.nick.nmeconomy.command.ModCommands;
 import com.nick.nmeconomy.creativemodetab.ModCreativeModeTabs;
-import com.nick.nmeconomy.data.Business;
-import com.nick.nmeconomy.data.EconomyPlayer;
+import com.nick.nmeconomy.data.business.Business;
+import com.nick.nmeconomy.data.business.types.*;
+import com.nick.nmeconomy.data.player.EconomyPlayer;
 import com.nick.nmeconomy.item.ModItems;
 import com.nick.nmeconomy.item.components.CashComponent;
 import com.nick.nmeconomy.item.components.ModComponents;
@@ -36,7 +37,13 @@ public class NMEconomy implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		EconomyPlayer.registerEconomyPlayer();
-		Business.registerBusinesses();
+		NotSetBusiness.registerBusiness();
+		DeliveryBusiness.registerBusiness();
+		GarbageBusiness.registerBusiness();
+		RestaurantBusiness.registerBusiness();
+		FishingBusiness.registerBusiness();
+		MiningBusiness.registerBusiness();
+		LoggingBusiness.registerBusiness();
 		PayloadTypeRegistry.serverboundPlay().register(ServerboundDepositPayload.TYPE, ServerboundDepositPayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(ServerboundWithdrawPayload.TYPE, ServerboundWithdrawPayload.CODEC);
 		ModCreativeModeTabs.registerModCreativeModeTabs();

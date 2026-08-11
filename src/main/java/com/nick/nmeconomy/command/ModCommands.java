@@ -3,7 +3,7 @@ package com.nick.nmeconomy.command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.nick.nmeconomy.NMEconomy;
-import com.nick.nmeconomy.data.EconomyPlayer;
+import com.nick.nmeconomy.data.player.EconomyPlayer;
 import com.nick.nmeconomy.item.ModItems;
 import com.nick.nmeconomy.item.components.CashComponent;
 import com.nick.nmeconomy.item.components.ModComponents;

@@ -1,6 +1,6 @@
 package com.nick.nmeconomy.render.screen.atm;
 
-import com.nick.nmeconomy.data.EconomyPlayer;
+import com.nick.nmeconomy.data.player.EconomyPlayer;
 import com.nick.nmeconomy.item.ModItems;
 import com.nick.nmeconomy.item.components.CashComponent;
 import com.nick.nmeconomy.item.components.ModComponents;
