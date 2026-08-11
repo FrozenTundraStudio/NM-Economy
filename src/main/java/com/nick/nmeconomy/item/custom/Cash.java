@@ -25,14 +25,11 @@ public class Cash extends Item {
             int otherCashAmount = otherComponent.amount();
             cashTotal += selfCashAmount;
             cashTotal += otherCashAmount;
-
             player.getInventory().removeItem(self);
-
             CashComponent newCashComponent = new CashComponent(cashTotal);
             other.set(ModComponents.CASH_COMPONENT, newCashComponent);
             return true;
         }
-
         return false;
     }
 }
