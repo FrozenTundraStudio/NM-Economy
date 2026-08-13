@@ -1,4 +1,4 @@
-package com.nick.nmeconomy.render.widgets;
+package com.nick.nmeconomy.render.widgets.atm;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;

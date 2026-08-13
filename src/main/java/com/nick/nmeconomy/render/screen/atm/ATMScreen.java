@@ -1,7 +1,7 @@
 package com.nick.nmeconomy.render.screen.atm;
 
 import com.nick.nmeconomy.data.player.EconomyPlayer;
-import com.nick.nmeconomy.render.widgets.ATMBackgroundWidget;
+import com.nick.nmeconomy.render.widgets.atm.ATMBackgroundWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;

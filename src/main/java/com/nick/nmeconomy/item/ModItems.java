@@ -4,6 +4,7 @@ import com.nick.nmeconomy.NMEconomy;
 import com.nick.nmeconomy.item.components.CashComponent;
 import com.nick.nmeconomy.item.components.ModComponents;
 import com.nick.nmeconomy.item.custom.Cash;
+import com.nick.nmeconomy.item.custom.Tablet;
 import com.nick.nmeconomy.item.custom.Wallet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,6 +22,9 @@ public class ModItems {
     public static final Item WALLET = registerItem("wallet",
             properties -> new Wallet(properties.stacksTo(1)));
 
+    public static final Item TABLET = registerItem("tablet",
+            properties -> new Tablet(properties.stacksTo(1)));
+
     private static Item registerItem(String name, Function<Item.Properties, Item> function) {
         return Registry.register(BuiltInRegistries.ITEM, Identifier.fromNamespaceAndPath(NMEconomy.MOD_ID, name),
                 function.apply(new Item.Properties().setId(ResourceKey.create(
@@ -29,7 +33,6 @@ public class ModItems {
 
     public static void registerModItems() {
         NMEconomy.LOGGER.info("Registering Mod Items for " + NMEconomy.MOD_ID);
-
     }
 
 }

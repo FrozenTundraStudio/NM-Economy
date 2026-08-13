@@ -1,4 +1,4 @@
-package com.nick.nmeconomy.render.screen;
+package com.nick.nmeconomy.render.screen.wallet;
 
 import com.nick.nmeconomy.render.menu.WalletMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;

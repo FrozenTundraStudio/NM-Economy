@@ -21,10 +21,9 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.ATM_BLOCK);
                         output.accept(ModItems.WALLET);
                         output.accept(ModBlocks.WALLET_BLOCK);
+                        output.accept(ModItems.TABLET);
 
                     }).build());
-
-
 
     public static void registerModCreativeModeTabs() {
         NMEconomy.LOGGER.info("Registering Creative Mode Tabs for " + NMEconomy.MOD_ID);

@@ -1,4 +1,4 @@
-package com.nick.nmeconomy.render.widgets;
+package com.nick.nmeconomy.render.widgets.tablet;
 
 import com.nick.nmeconomy.NMEconomy;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -9,14 +9,14 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
-public class ATMBackgroundWidget extends AbstractWidget {
-    public ATMBackgroundWidget(int x, int y, int width, int height) {
+public class TabletBackgroundWidget extends AbstractWidget {
+    public TabletBackgroundWidget(int x, int y, int width, int height) {
         super(x, y, width, height, Component.empty());
     }
 
     @Override
     protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-        Identifier atmScreenBackground = Identifier.fromNamespaceAndPath(NMEconomy.MOD_ID, "textures/gui/atmscreen.png");
+        Identifier atmScreenBackground = Identifier.fromNamespaceAndPath(NMEconomy.MOD_ID, "textures/gui/tablet.png");
         graphics.blit(RenderPipelines.GUI_TEXTURED, atmScreenBackground, getX(), getY(), 0, 0, this.width, this.height, this.width, this.height);
     }
 
