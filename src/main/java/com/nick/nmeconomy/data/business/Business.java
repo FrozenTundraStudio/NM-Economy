@@ -1,8 +1,10 @@
 package com.nick.nmeconomy.data.business;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public interface Business {
+    HashMap<String, String> employees = new HashMap<>();
     BusinessType getBusinessType();
     String getOwner();
     String getBusinessName();
@@ -15,9 +17,9 @@ public interface Business {
     void setOwner(String owner);
     void setBusinessName(String businessName);
     void setBalance(int balance);
-    void setEmployees(Map<String, String> employees);
-    void setExpenses(Map<String, Integer> expenses);
-    void setRevenue(Map<String, Integer> revenue);
+    void addEmployee(String employee, String position);
+    void setExpenses(HashMap<String, Integer> expenses);
+    void setRevenue(HashMap<String, Integer> revenue);
 
     enum BusinessType {
         NOT_SET,

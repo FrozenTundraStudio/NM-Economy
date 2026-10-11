@@ -1,6 +1,6 @@
 package com.nick.nmeconomy.item.custom;
 
-import com.nick.nmeconomy.render.screen.tablet_screen.TabletScreen;
+import com.nick.nmeconomy.render.screen.tablet.TabletScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;

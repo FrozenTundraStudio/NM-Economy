@@ -1,4 +1,4 @@
-package com.nick.nmeconomy.network;
+package com.nick.nmeconomy.network.atm;
 
 import com.nick.nmeconomy.NMEconomy;
 import net.minecraft.network.RegistryFriendlyByteBuf;

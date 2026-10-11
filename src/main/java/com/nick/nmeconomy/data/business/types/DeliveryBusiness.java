@@ -21,8 +21,7 @@ public class DeliveryBusiness extends SavedData implements Business {
     private Map<String, Integer> expenses = new HashMap<>();
     private Map<String, Integer> revenue = new HashMap<>();
 
-    public DeliveryBusiness() {
-    }
+    public DeliveryBusiness() {}
 
     public DeliveryBusiness(BusinessType type, String owner, String businessName, int balance, Map employees, Map expenses, Map revenue) {
         this.type = type;
@@ -39,56 +38,61 @@ public class DeliveryBusiness extends SavedData implements Business {
         return type;
     }
     @Override
-    public String getOwner() {
-        return owner;
-    }
-    @Override
-    public String getBusinessName() {
-        return businessName;
-    }
-    @Override
-    public int getBalance() {
-        return balance;
-    }
-    @Override
-    public Map<String, String> getEmployees() {
-        return employees;
-    }
-    @Override
-    public Map<String, Integer> getExpenses() {
-        return expenses;
-    }
-    @Override
-    public Map<String, Integer> getRevenue() {
-        return revenue;
+    public void setBusinessType(BusinessType type) {
+        this.type = type;
     }
 
     @Override
-    public void setBusinessType(BusinessType type) {
-        this.type = type;
+    public String getOwner() {
+        return owner;
     }
     @Override
     public void setOwner(String owner) {
         this.owner = owner;
     }
+
+    @Override
+    public String getBusinessName() {
+        return businessName;
+    }
     @Override
     public void setBusinessName(String businessName) {
         this.businessName = businessName;
+    }
+
+    @Override
+    public int getBalance() {
+        return balance;
     }
     @Override
     public void setBalance(int balance) {
         this.balance = balance;
     }
+
     @Override
-    public void setEmployees(Map<String, String> employees) {
-        this.employees = employees;
+    public Map<String, String> getEmployees() {
+        return employees;
     }
     @Override
-    public void setExpenses(Map<String, Integer> expenses) {
+    public void addEmployee(String employee, String position) {
+        this.employees.put(employee, position);
+    }
+
+    @Override
+    public Map<String, Integer> getExpenses() {
+        return expenses;
+    }
+    @Override
+    public void setExpenses(HashMap<String, Integer> expenses) {
         this.expenses = expenses;
     }
+
     @Override
-    public void setRevenue(Map<String, Integer> revenue) {
+    public Map<String, Integer> getRevenue() {
+        return revenue;
+    }
+    @Override
+    public void setRevenue(HashMap<String, Integer> revenue) {
         this.revenue = revenue;
     }
 

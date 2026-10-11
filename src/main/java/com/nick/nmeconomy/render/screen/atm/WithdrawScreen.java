@@ -2,7 +2,7 @@ package com.nick.nmeconomy.render.screen.atm;
 
 import com.nick.nmeconomy.data.player.EconomyPlayer;
 import com.nick.nmeconomy.item.ModItems;
-import com.nick.nmeconomy.network.ServerboundWithdrawPayload;
+import com.nick.nmeconomy.network.atm.ServerboundWithdrawPayload;
 import com.nick.nmeconomy.render.widgets.atm.ATMBackgroundWidget;
 import com.nick.nmeconomy.render.widgets.atm.WithdrawTextFieldWidget;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;

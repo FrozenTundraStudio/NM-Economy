@@ -1,17 +1,21 @@
 package com.nick.nmeconomy;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.nick.nmeconomy.block.ModBlocks;
 import com.nick.nmeconomy.block.entity.ModBlockEntities;
 import com.nick.nmeconomy.command.ModCommands;
 import com.nick.nmeconomy.creativemodetab.ModCreativeModeTabs;
 import com.nick.nmeconomy.data.business.types.*;
+import com.nick.nmeconomy.data.government.police.PoliceDepartment;
+import com.nick.nmeconomy.data.government.prison.Prison;
 import com.nick.nmeconomy.data.player.EconomyPlayer;
 import com.nick.nmeconomy.item.ModItems;
 import com.nick.nmeconomy.item.components.CashComponent;
 import com.nick.nmeconomy.item.components.ModComponents;
-import com.nick.nmeconomy.network.ServerboundDepositPayload;
-import com.nick.nmeconomy.network.ServerboundWithdrawPayload;
+import com.nick.nmeconomy.network.atm.ServerboundDepositPayload;
+import com.nick.nmeconomy.network.atm.ServerboundWithdrawPayload;
+import com.nick.nmeconomy.network.tablet.ServerboundEmployeePayload;
 import com.nick.nmeconomy.render.menu.ModMenuTypes;
 import com.nick.nmeconomy.render.screen.wallet.WalletScreen;
 import net.fabricmc.api.ModInitializer;
@@ -23,7 +27,9 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
@@ -43,8 +49,11 @@ public class NMEconomy implements ModInitializer {
 		FishingBusiness.registerBusiness();
 		MiningBusiness.registerBusiness();
 		LoggingBusiness.registerBusiness();
+		PoliceDepartment.registerBusiness();
+		Prison.registerPrison();
 		PayloadTypeRegistry.serverboundPlay().register(ServerboundDepositPayload.TYPE, ServerboundDepositPayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(ServerboundWithdrawPayload.TYPE, ServerboundWithdrawPayload.CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(ServerboundEmployeePayload.TYPE, ServerboundEmployeePayload.CODEC);
 		ModCreativeModeTabs.registerModCreativeModeTabs();
 		ModBlocks.registerModBlocks();
 		ModItems.registerModItems();
@@ -100,6 +109,42 @@ public class NMEconomy implements ModInitializer {
             }
         });
 
+		/* New employee receiver */
+		ServerPlayNetworking.registerGlobalReceiver(ServerboundEmployeePayload.TYPE, (payload, context) -> {
+			MinecraftServer server = context.server();
+			String playerName = payload.employeeName();
+			String position = payload.position();
+			String jobType = payload.jobType();
+			switch (jobType) {
+				case "delivery":
+					DeliveryBusiness deliveryBusiness = DeliveryBusiness.getBusiness(server);
+					deliveryBusiness.addEmployee(playerName, position);
+					break;
+				case "fishing":
+					FishingBusiness fishingBusiness = FishingBusiness.getBusiness(server);
+					fishingBusiness.addEmployee(playerName, position);
+					break;
+				case "garbage":
+					GarbageBusiness garbageBusiness = GarbageBusiness.getBusiness(server);
+					garbageBusiness.addEmployee(playerName, position);
+					break;
+				case "logging":
+					LoggingBusiness loggingBusiness = LoggingBusiness.getBusiness(server);
+					loggingBusiness.addEmployee(playerName, position);
+					break;
+				case "mining":
+					MiningBusiness miningBusiness = MiningBusiness.getBusiness(server);
+					miningBusiness.addEmployee(playerName, position);
+					break;
+				case "restaurant":
+					RestaurantBusiness restaurantBusiness = RestaurantBusiness.getBusiness(server);
+					restaurantBusiness.addEmployee(playerName, position);
+					break;
+                default:
+					break;
+			}
+		});
+
 		/* Command Registration */
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
 			dispatcher.register(Commands.literal("addtobank")
@@ -118,6 +163,19 @@ public class NMEconomy implements ModInitializer {
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
 			dispatcher.register(Commands.literal("combine")
 					.executes(ModCommands::combineCommand));
+		});
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+			dispatcher.register(Commands.literal("addcell")
+					.executes(ModCommands::addCellCommand));
+		});
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+			dispatcher.register(Commands.literal("arrest")
+					.then(Commands.argument("player", StringArgumentType.string())
+							.executes(ModCommands::arrestCommand)));
+		});
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+			dispatcher.register(Commands.literal("createprison")
+					.executes(ModCommands::createPrisonCommand));
 		});
 	}
 

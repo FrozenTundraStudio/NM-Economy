@@ -4,7 +4,7 @@ import com.nick.nmeconomy.data.player.EconomyPlayer;
 import com.nick.nmeconomy.item.ModItems;
 import com.nick.nmeconomy.item.components.CashComponent;
 import com.nick.nmeconomy.item.components.ModComponents;
-import com.nick.nmeconomy.network.ServerboundDepositPayload;
+import com.nick.nmeconomy.network.atm.ServerboundDepositPayload;
 import com.nick.nmeconomy.render.widgets.atm.ATMBackgroundWidget;
 import com.nick.nmeconomy.render.widgets.atm.DepositTextFieldWidget;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;

@@ -1,20 +1,26 @@
 package com.nick.nmeconomy.command;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.nick.nmeconomy.NMEconomy;
+import com.nick.nmeconomy.data.government.prison.Cell;
+import com.nick.nmeconomy.data.government.prison.Inmate;
+import com.nick.nmeconomy.data.government.prison.Prison;
 import com.nick.nmeconomy.data.player.EconomyPlayer;
 import com.nick.nmeconomy.item.ModItems;
 import com.nick.nmeconomy.item.components.CashComponent;
 import com.nick.nmeconomy.item.components.ModComponents;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public class ModCommands {
+import java.util.List;
 
+public class ModCommands {
     public static int splitCommand(CommandContext<CommandSourceStack> context) {
         ServerPlayer player = context.getSource().getPlayer();
         ItemStack heldItem = player.getMainHandItem();
@@ -78,4 +84,71 @@ public class ModCommands {
         NMEconomy.LOGGER.info(player.getPlainTextName() + " Used /combine");
         return 1;
     }
+
+    public static int createPrisonCommand(CommandContext<CommandSourceStack> context) {
+        Prison prison = new Prison();
+        List<Cell> cells = prison.getCells();
+
+        Cell cell = new Cell();
+        int cellAmount = cells.size();
+        cell.cellNumber = cellAmount + 1;
+        cell.cellPosition = context.getSource().getPlayer().blockPosition();
+        cell.occupied = false;
+        prison.addCell(cell);
+        cells.add(cell);
+
+        context.getSource().sendSuccess(() -> Component.literal("Cell has been added."), false);
+        NMEconomy.LOGGER.info(context.getSource().getPlayer().getPlainTextName() + " Created a cell.");
+        return 1;
+    }
+
+    public static int addCellCommand(CommandContext<CommandSourceStack> context) {
+        Prison prison = new Prison();
+        List<Cell> cells = prison.getCells();
+
+        Cell cell = new Cell();
+        int cellAmount = cells.size();
+        cell.cellNumber = cellAmount + 1;
+        cell.cellPosition = context.getSource().getPlayer().blockPosition();
+        cell.occupied = false;
+        prison.addCell(cell);
+        cells.add(cell);
+
+        context.getSource().sendSuccess(() -> Component.literal("Cell has been added."), false);
+        NMEconomy.LOGGER.info(context.getSource().getPlayer().getPlainTextName() + " Created a cell.");
+        return 1;
+    }
+
+    public static int arrestCommand(CommandContext<CommandSourceStack> context) {
+        ServerPlayer serverPlayer = context.getSource().getPlayer();
+        MinecraftServer server = context.getSource().getServer();
+        String playerName = StringArgumentType.getString(context, "player");
+        ServerPlayer target = server.getPlayerList().getPlayer(playerName);
+
+        Prison prison = new Prison();
+
+        Inmate inmate = new Inmate();
+        inmate.name = playerName;
+        inmate.uuid = target.getUUID();
+
+        List<Cell> cells = prison.getCells();
+        for(Cell cell : cells) {
+            if(cell.occupied == false) {
+                inmate.cell = cell;
+                target.teleportTo(cell.cellPosition.getX(), cell.cellPosition.getY(), cell.cellPosition.getZ());
+            }
+        }
+
+        Cell cell = new Cell();
+        cell.cellNumber = 1;
+
+        prison.addCell(cell);
+        prison.addInmate(inmate);
+        prison.addInmateDetails(inmate, cell);
+
+        context.getSource().sendSuccess(() -> Component.literal(playerName + " has been arrested."), false);
+        NMEconomy.LOGGER.info(serverPlayer.getPlainTextName() + " arrested " + playerName);
+        return 1;
+    }
+
 }
