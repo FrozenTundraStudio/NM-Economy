@@ -17,7 +17,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-
 import java.util.List;
 
 public class ModCommands {
@@ -86,33 +85,26 @@ public class ModCommands {
     }
 
     public static int createPrisonCommand(CommandContext<CommandSourceStack> context) {
-        Prison prison = new Prison();
-        List<Cell> cells = prison.getCells();
+        MinecraftServer server = context.getSource().getServer();
+        Prison prison = Prison.getPrison(server);
+        String prisonName = StringArgumentType.getString(context, "name");
+        prison.setPrisonName(prisonName);
 
-        Cell cell = new Cell();
-        int cellAmount = cells.size();
-        cell.cellNumber = cellAmount + 1;
-        cell.cellPosition = context.getSource().getPlayer().blockPosition();
-        cell.occupied = false;
-        prison.addCell(cell);
-        cells.add(cell);
-
-        context.getSource().sendSuccess(() -> Component.literal("Cell has been added."), false);
-        NMEconomy.LOGGER.info(context.getSource().getPlayer().getPlainTextName() + " Created a cell.");
+        context.getSource().sendSuccess(() -> Component.literal("Prison has been created."), false);
+        NMEconomy.LOGGER.info(context.getSource().getPlayer().getPlainTextName() + " Created a prison.");
         return 1;
     }
 
     public static int addCellCommand(CommandContext<CommandSourceStack> context) {
-        Prison prison = new Prison();
-        List<Cell> cells = prison.getCells();
-
+        MinecraftServer server = context.getSource().getServer();
+        Prison prison = Prison.getPrison(server);
         Cell cell = new Cell();
+        List<Cell> cells = prison.cells;
         int cellAmount = cells.size();
         cell.cellNumber = cellAmount + 1;
         cell.cellPosition = context.getSource().getPlayer().blockPosition();
         cell.occupied = false;
         prison.addCell(cell);
-        cells.add(cell);
 
         context.getSource().sendSuccess(() -> Component.literal("Cell has been added."), false);
         NMEconomy.LOGGER.info(context.getSource().getPlayer().getPlainTextName() + " Created a cell.");
@@ -121,30 +113,28 @@ public class ModCommands {
 
     public static int arrestCommand(CommandContext<CommandSourceStack> context) {
         ServerPlayer serverPlayer = context.getSource().getPlayer();
-        MinecraftServer server = context.getSource().getServer();
         String playerName = StringArgumentType.getString(context, "player");
+        MinecraftServer server = context.getSource().getServer();
         ServerPlayer target = server.getPlayerList().getPlayer(playerName);
+        Prison prison = Prison.getPrison(server);
 
-        Prison prison = new Prison();
-
-        Inmate inmate = new Inmate();
-        inmate.name = playerName;
-        inmate.uuid = target.getUUID();
-
-        List<Cell> cells = prison.getCells();
+        List<Cell> cells = prison.cells;
         for(Cell cell : cells) {
             if(cell.occupied == false) {
+                Inmate inmate = new Inmate();
+                inmate.name = playerName;
+                inmate.uuid = target.getUUID();
                 inmate.cell = cell;
+                cell.setInmate(inmate);
                 target.teleportTo(cell.cellPosition.getX(), cell.cellPosition.getY(), cell.cellPosition.getZ());
+                boolean occupied = true;
+                cell.setOccupiedStatus(occupied);
+                prison.addInmate(inmate);
+                break;
+            } else {
+                context.getSource().sendSuccess(() -> Component.literal("There are no available cells."), false);
             }
         }
-
-        Cell cell = new Cell();
-        cell.cellNumber = 1;
-
-        prison.addCell(cell);
-        prison.addInmate(inmate);
-        prison.addInmateDetails(inmate, cell);
 
         context.getSource().sendSuccess(() -> Component.literal(playerName + " has been arrested."), false);
         NMEconomy.LOGGER.info(serverPlayer.getPlainTextName() + " arrested " + playerName);

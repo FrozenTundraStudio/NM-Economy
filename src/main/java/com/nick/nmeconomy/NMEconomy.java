@@ -8,6 +8,8 @@ import com.nick.nmeconomy.command.ModCommands;
 import com.nick.nmeconomy.creativemodetab.ModCreativeModeTabs;
 import com.nick.nmeconomy.data.business.types.*;
 import com.nick.nmeconomy.data.government.police.PoliceDepartment;
+import com.nick.nmeconomy.data.government.prison.Cell;
+import com.nick.nmeconomy.data.government.prison.Inmate;
 import com.nick.nmeconomy.data.government.prison.Prison;
 import com.nick.nmeconomy.data.player.EconomyPlayer;
 import com.nick.nmeconomy.item.ModItems;
@@ -165,6 +167,11 @@ public class NMEconomy implements ModInitializer {
 					.executes(ModCommands::combineCommand));
 		});
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+			dispatcher.register(Commands.literal("createprison")
+					.then(Commands.argument("name", StringArgumentType.string())
+							.executes(ModCommands::createPrisonCommand)));
+		});
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
 			dispatcher.register(Commands.literal("addcell")
 					.executes(ModCommands::addCellCommand));
 		});
@@ -173,10 +180,7 @@ public class NMEconomy implements ModInitializer {
 					.then(Commands.argument("player", StringArgumentType.string())
 							.executes(ModCommands::arrestCommand)));
 		});
-		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-			dispatcher.register(Commands.literal("createprison")
-					.executes(ModCommands::createPrisonCommand));
-		});
+
 	}
 
 	public static Identifier id(String path) {
