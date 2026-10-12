@@ -96,18 +96,22 @@ public class ModCommands {
     }
 
     public static int addCellCommand(CommandContext<CommandSourceStack> context) {
-        MinecraftServer server = context.getSource().getServer();
-        Prison prison = Prison.getPrison(server);
-        Cell cell = new Cell();
-        List<Cell> cells = prison.cells;
-        int cellAmount = cells.size();
-        cell.cellNumber = cellAmount + 1;
-        cell.cellPosition = context.getSource().getPlayer().blockPosition();
-        cell.occupied = false;
-        prison.addCell(cell);
+        try {
+            MinecraftServer server = context.getSource().getServer();
+            Prison prison = Prison.getPrison(server);
+            Cell cell = new Cell();
+            List<Cell> cells = prison.cells;
+            int cellAmount = cells.size();
+            cell.cellNumber = cellAmount + 1;
+            cell.cellPosition = context.getSource().getPlayer().blockPosition();
+            cell.occupied = false;
+            prison.addCell(cell);
 
-        context.getSource().sendSuccess(() -> Component.literal("Cell has been added."), false);
-        NMEconomy.LOGGER.info(context.getSource().getPlayer().getPlainTextName() + " Created a cell.");
+            context.getSource().sendSuccess(() -> Component.literal("Cell has been added."), false);
+            NMEconomy.LOGGER.info(context.getSource().getPlayer().getPlainTextName() + " Created a cell.");
+        } catch (Exception exception) {
+            NMEconomy.LOGGER.info(exception.getMessage());
+        }
         return 1;
     }
 
@@ -117,27 +121,30 @@ public class ModCommands {
         MinecraftServer server = context.getSource().getServer();
         ServerPlayer target = server.getPlayerList().getPlayer(playerName);
         Prison prison = Prison.getPrison(server);
-
         List<Cell> cells = prison.cells;
-        for(Cell cell : cells) {
-            if(cell.occupied == false) {
-                Inmate inmate = new Inmate();
-                inmate.name = playerName;
-                inmate.uuid = target.getUUID();
-                inmate.cell = cell;
-                cell.setInmate(inmate);
-                target.teleportTo(cell.cellPosition.getX(), cell.cellPosition.getY(), cell.cellPosition.getZ());
-                boolean occupied = true;
-                cell.setOccupiedStatus(occupied);
-                prison.addInmate(inmate);
-                break;
-            } else {
-                context.getSource().sendSuccess(() -> Component.literal("There are no available cells."), false);
+        if (!cells.isEmpty()) {
+            for(Cell cell : cells) {
+                try {
+                    if(cell.occupied == false) {
+                        Inmate inmate = new Inmate();
+                        inmate.name = playerName;
+                        inmate.uuid = target.getUUID();
+                        cell.setInmate(inmate);
+                        target.teleportTo(cell.cellPosition.getX(), cell.cellPosition.getY(), cell.cellPosition.getZ());
+                        boolean occupied = true;
+                        cell.setOccupiedStatus(occupied);
+                        prison.addInmate(inmate);
+                        context.getSource().sendSuccess(() -> Component.literal(playerName + " has been arrested."), false);
+                        NMEconomy.LOGGER.info(serverPlayer.getPlainTextName() + " arrested " + playerName);
+                        break;
+                    }
+                } catch (Exception exception) {
+                    context.getSource().sendSuccess(() -> Component.literal("There are no available cells."), false);
+                }
             }
+        } else {
+            context.getSource().sendSuccess(() -> Component.literal("There are no available cells."), false);
         }
-
-        context.getSource().sendSuccess(() -> Component.literal(playerName + " has been arrested."), false);
-        NMEconomy.LOGGER.info(serverPlayer.getPlainTextName() + " arrested " + playerName);
         return 1;
     }
 

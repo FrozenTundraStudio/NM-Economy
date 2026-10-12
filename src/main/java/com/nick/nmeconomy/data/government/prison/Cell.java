@@ -2,15 +2,8 @@ package com.nick.nmeconomy.data.government.prison;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.nick.nmeconomy.NMEconomy;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.level.saveddata.SavedDataType;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Cell extends SavedData {
     public int cellNumber;
